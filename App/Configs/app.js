@@ -4,7 +4,13 @@ const UserRoutes = require('../../Routes/UserRoutes');
 const DashboardRoutes = require('../../Routes/DashboardRoutes');
 const AccountRoutes = require('../../Routes/AccountRoutes');
 const ApplicationRoutes = require('../../Routes/ApplicationRoutes');
+
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('../../public/api-docs/swagger.json');
+
 const app = express();
+
+app.use('/v2/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true }));
