@@ -7,9 +7,10 @@ exports.authenticateToken = async (req, res, next) => {
     if (token != null && token != "undefined") {
         jwt.verify(token, process.env.JWT_KEY, async (err, user) => {
             if (err) return res.status(403).json('Invalid Token');
+
+            if (!err) next();
         });
     } else {
         return res.status(403).json('Invalid Token');
     }
-    next();
 }

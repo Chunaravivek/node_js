@@ -25,24 +25,31 @@ exports.getrecords = async (req, res, next) => {
 exports.create_one = async (req, res, next) => {
     const body_data = req.body;
 
-    const check_data = await ApplicationModel.findOne({ name: body_data.name });
-    console.log("check_data", check_data)
+    const check_data = await ApplicationModel.findOne({ package_name: body_data.package_name });
     if (check_data) return res.status(400).json("Already Exists Data!");
 
-    // let account = new ApplicationModel({
-    //     name: body_data.name,
-    //     platform: body_data.platform,
-    //     url: body_data.url,
-    //     email: body_data.email,
-    //     status: 1,
-    // });
+    const app_code = app_random(6);
 
-    // account = await account.save();
-    res.status(200).json(check_data);
+    const check_app_code = await ApplicationModel.findOne({ app_code: body_data.app_code });
+    if (check_app_code) return res.status(400).json("Already Exists app code!");
+
+    const application = new ApplicationModel({
+        name: body_data.name,
+        app_version: body_data.app_version,
+        account_id: body_data.account_id,
+        package_name: body_data.package_name,
+        firebase_id: body_data.firebase_id,
+        sender_id: body_data.sender_id,
+        account_url: body_data.account_url,
+        app_code: app_code,
+    });
+
+    const res_application = await application.save();
+    res.status(200).json(res_application);
 };
 
 exports.get_all = async (req, res, next) => {
-    const get_all = await ApplicationModel.find();
+    const get_all = await ApplicationModel.find().populate('account_id', {select: "name"});
 
     if (!get_all) return res.status(400).json("Sorry not data available!");
     res.status(200).json(get_all);
@@ -50,20 +57,36 @@ exports.get_all = async (req, res, next) => {
 
 exports.get_one = async (req, res, next) => {
     const id = req.params.id;
-    var o_id = new ObjectId(id);
 
-    const get_one = await ApplicationModel.findOne({ _id: o_id });
+    if (!id) return res.status(400).json("Not found id!");
+
+    try {
+        var o_id = new ObjectId(id);
+    } catch (error) {
+        return res.status(400).json(error);
+    }
+
+    const get_one = await ApplicationModel.findOne({ _id: o_id }).populate('account_id', {select: "name"});
 
     if (!get_one) return res.status(400).json("Sorry not data available!");
     res.status(200).json(get_one);
 };
 
 exports.update_one = async (req, res, next) => {
-    const get_data = await ApplicationModel.findOne({ name: req.body.name });
+    const id = req.body.id;
 
+    if (!id) return res.status(400).json("Not found id!");
+
+    try {
+        var o_id = new ObjectId(id);
+    } catch (error) {
+        return res.status(400).json(error);
+    }
+
+    const get_data = await ApplicationModel.findOne({ _id: { $ne: o_id }, package_name: req.body.package_name });
     if (get_data) return res.status(400).json("Sorry data already exists!");
 
-    let doc = await ApplicationModel.findByIdAndUpdate(req.params.id, req.body, {
+    let doc = await ApplicationModel.findByIdAndUpdate(id, req.body, {
         new: true,
         runValidators: true,
     });
@@ -88,3 +111,15 @@ exports.ValidateBody = async (req, res, next) => {
     if (error) return res.status(400).json(error.details[0].message);
     next();
 };
+
+var app_random = function (length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        counter += 1;
+    }
+    return result;
+}

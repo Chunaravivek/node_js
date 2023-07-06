@@ -15,8 +15,8 @@ router.route('/get_all')
 router.route('/get_one/:id')
 .get(authenticateToken, get_one);
 
-router.route('/update_one/:id')
-.get(authenticateToken, update_one);
+router.route('/update_one')
+.post(authenticateToken, update_one);
 
 router.route('/delete_one/:id')
 .get(authenticateToken, delete_one);

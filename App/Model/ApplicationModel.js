@@ -82,7 +82,8 @@ function ValidateApplication(application) {
         package_name: Joi.string().min(3).max(255).required(),
         firebase_id: Joi.string().min(3).max(255).required(),
         sender_id: Joi.string().min(3).max(255).required(),
-        app_code: Joi.string().min(3).max(255).required(),
+        account_id: Joi.string().min(3).max(255).required(),
+        account_url: Joi.string().min(3).max(255).required(),
     });
 
     return schema.validate(application);
