@@ -63,7 +63,7 @@ exports.get_one = async (req, res, next) => {
     try {
         var o_id = new ObjectId(id);
     } catch (error) {
-        return res.status(400).json(error);
+        return res.status(400).json(error.message);
     }
 
     const get_one = await ApplicationModel.findOne({ _id: o_id }).populate('account_id', {select: "name"});
@@ -80,13 +80,16 @@ exports.update_one = async (req, res, next) => {
     try {
         var o_id = new ObjectId(id);
     } catch (error) {
-        return res.status(400).json(error);
+        return res.status(400).json(error.message);
     }
+
+    const if_check_data = await AccountModel.findOne({_id: o_id});
+    if (!if_check_data) return res.status(400).json("Sorry data not exists!");
 
     const get_data = await ApplicationModel.findOne({ _id: { $ne: o_id }, package_name: req.body.package_name });
     if (get_data) return res.status(400).json("Sorry data already exists!");
 
-    let doc = await ApplicationModel.findByIdAndUpdate(id, req.body, {
+    let doc = await ApplicationModel.findByIdAndUpdate(o_id, req.body, {
         new: true,
         runValidators: true,
     });

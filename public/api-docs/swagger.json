@@ -13,6 +13,11 @@
 	"schemes": [
 		"http"
 	],
+	"security": [
+		{
+			"ApiKeyAuth": []
+		}
+	],
 	"paths": {
 		"/register": {
 			"post": {
@@ -51,8 +56,12 @@
 						"name": "gender",
 						"in": "formData",
 						"required": true,
-						"description": "Male or Female",
-						"type": "enum"
+						"schema": {
+							"type": "string",
+							"enum": ["Male", "Female"],
+							"default": "Male"
+						},
+						"description": "Male or Female"
 					},
 					{
 						"name": "email",
@@ -133,6 +142,549 @@
 					}
 				}
 			}
+		},
+		"/dashboard/index": {
+			"get": {
+				"tags": ["Dashboard Index"],
+				"description": "Dashboard All data count modules",
+				"operationId": "getDashboard",
+				"parameters": [
+					{
+						"name": "authorization",
+						"in": "header",
+						"required": true,
+						"description": "Token pass"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Missing parameters"
+					}
+				}
+			}
+		},
+		"/accounts/create_one": {
+			"post": {
+				"tags": ["Account"],
+				"description": "Save data for account",
+				"operationId": "SaveAccount",
+				"consumes": [
+					"application/json"
+				],
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "authorization",
+						"in": "header",
+						"required": true,
+						"description": "Token pass"
+					},
+					{
+						"name": "name",
+						"in": "path",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "platform",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"enum": [1, 2],
+							"default": 1
+						},
+						"description": "1 or 2"
+					},
+					{
+						"name": "url",
+						"in": "path",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "email",
+						"in": "path",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Missing parameters"
+					}
+				}
+			}
+		},
+		"/accounts/get_one/{id}": {
+			"get": {
+				"tags": ["Account"],
+				"description": "Get by one id display account",
+				"operationId": "GetOneById",
+				"parameters": [
+					{
+						"name": "authorization",
+						"in": "header",
+						"required": true,
+						"description": "Token pass"
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"required": true
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Missing parameters"
+					}
+				}
+			}
+		},
+		"/accounts/get_all": {
+			"get": {
+				"tags": ["Account"],
+				"description": "Get by all display account",
+				"operationId": "GetOneByAll",
+				"parameters": [
+					{
+						"name": "authorization",
+						"in": "header",
+						"required": true,
+						"description": "Token pass"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Missing parameters"
+					}
+				}
+			}
+		},
+		"/accounts/update_one": {
+			"post": {
+				"tags": ["Account"],
+				"description": "Get by update account",
+				"operationId": "GetOneByUpdate",
+				"consumes": [
+					"application/x-www-form-urlencoded",
+					"application/json"
+				],
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "authorization",
+						"in": "header",
+						"required": true,
+						"description": "Token pass"
+					},
+					{
+						"name": "id",
+						"in": "formData",
+						"required": true,
+						"description": "Hidden id",
+						"type": "string"
+					},
+					{
+						"name": "name",
+						"in": "formData",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "platform",
+						"in": "formData",
+						"required": true,
+						"type": "string",
+						"enum": [1, 2],
+						"default": 1,
+						"description": "1 or 2"
+					},
+					{
+						"name": "url",
+						"in": "formData",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "email",
+						"in": "formData",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Missing parameters"
+					}
+				}
+			}
+		},
+		"/accounts/delete_one/{id}": {
+			"get": {
+				"tags": ["Account"],
+				"description": "Get by id account delete",
+				"operationId": "GetOneByDelete",
+				"consumes": [
+					"application/x-www-form-urlencoded",
+					"application/json"
+				],
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "authorization",
+						"in": "header",
+						"required": true,
+						"description": "Token pass"
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Missing parameters"
+					}
+				}
+			}
+		},
+		"/accounts/delete_all": {
+			"get": {
+				"tags": ["Account"],
+				"description": "Get by all account delete",
+				"operationId": "GetOneByDeleteAll",
+				"consumes": [
+					"application/x-www-form-urlencoded",
+					"application/json"
+				],
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "authorization",
+						"in": "header",
+						"required": true,
+						"description": "Token pass"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Missing parameters"
+					}
+				}
+			}
+		},
+		"/applications/create_one": {
+			"post": {
+				"tags": ["Applications"],
+				"description": "Save data for account",
+				"operationId": "SaveAccount",
+				"consumes": [
+					"application/x-www-form-urlencoded",
+					"application/json"
+				],
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "authorization",
+						"in": "header",
+						"required": true,
+						"description": "Token pass"
+					},
+					{
+						"name": "name",
+						"in": "formData",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "account_id",
+						"in": "formData",
+						"required": true,
+						"description": "Account all get select id relationship",
+						"type": "string"
+					},
+					{
+						"name": "app_version",
+						"in": "formData",
+						"required": true,
+						"description": "app version",
+						"type": "string"
+					},
+					{
+						"name": "package_name",
+						"in": "formData",
+						"required": true,
+						"description": "google play store package name",
+						"type": "string"
+					},
+					{
+						"name": "firebase_id",
+						"in": "formData",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "sender_id",
+						"in": "formData",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "account_url",
+						"in": "formData",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Missing parameters"
+					}
+				}
+			}
+		},
+		"/applications/get_one/{id}": {
+			"get": {
+				"tags": ["Applications"],
+				"description": "Get by one id display application",
+				"operationId": "GetOneById",
+				"parameters": [
+					{
+						"name": "authorization",
+						"in": "header",
+						"required": true,
+						"description": "Token pass"
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"required": true
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Missing parameters"
+					}
+				}
+			}
+		},
+		"/applications/get_all": {
+			"get": {
+				"tags": ["Applications"],
+				"description": "Get by all display application",
+				"operationId": "GetOneByAll",
+				"parameters": [
+					{
+						"name": "authorization",
+						"in": "header",
+						"required": true,
+						"description": "Token pass"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Missing parameters"
+					}
+				}
+			}
+		},
+		"/applications/update_one": {
+			"post": {
+				"tags": ["Applications"],
+				"description": "Get by update application",
+				"operationId": "GetOneByUpdate",
+				"consumes": [
+					"application/x-www-form-urlencoded",
+					"application/json"
+				],
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "authorization",
+						"in": "header",
+						"required": true,
+						"description": "Token pass"
+					},
+					{
+						"name": "id",
+						"in": "formData",
+						"required": true,
+						"description": "Hidden id",
+						"type": "string"
+					},
+					{
+						"name": "name",
+						"in": "formData",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "account_id",
+						"in": "formData",
+						"required": true,
+						"description": "Account all get select id relationship",
+						"type": "string"
+					},
+					{
+						"name": "app_version",
+						"in": "formData",
+						"required": true,
+						"description": "app version",
+						"type": "string"
+					},
+					{
+						"name": "package_name",
+						"in": "formData",
+						"required": true,
+						"description": "google play store package name",
+						"type": "string"
+					},
+					{
+						"name": "firebase_id",
+						"in": "formData",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "sender_id",
+						"in": "formData",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "account_url",
+						"in": "formData",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Missing parameters"
+					}
+				}
+			}
+		},
+		"/applications/delete_one/{id}": {
+			"get": {
+				"tags": ["Applications"],
+				"description": "Get by id application delete",
+				"operationId": "GetOneByDelete",
+				"consumes": [
+					"application/x-www-form-urlencoded",
+					"application/json"
+				],
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "authorization",
+						"in": "header",
+						"required": true,
+						"description": "Token pass"
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Missing parameters"
+					}
+				}
+			}
+		},
+		"/applications/delete_all": {
+			"get": {
+				"tags": ["Applications"],
+				"description": "Get by all application delete",
+				"operationId": "GetOneByDeleteAll",
+				"consumes": [
+					"application/x-www-form-urlencoded",
+					"application/json"
+				],
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "authorization",
+						"in": "header",
+						"required": true,
+						"description": "Token pass"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Missing parameters"
+					}
+				}
+			}
+		}
+	},
+	"securitySchemes": {
+		"ApiKeyAuth": {
+			"type": "apiKey",
+			"in": "header",
+			"name": "authorization"
 		}
 	}
 }

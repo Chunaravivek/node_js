@@ -50,7 +50,14 @@ exports.get_all = async (req, res, next) => {
 
 exports.get_one = async (req, res, next) => {
     const id = req.params.id;
-    var o_id = new ObjectId(id);
+
+    if (!id) return res.status(400).json("Not found id!");
+    
+    try {
+        var o_id = new ObjectId(id);
+    } catch (error) {
+        return res.status(400).json(error.message);
+    }
 
     const get_one = await AccountModel.findOne({ _id: o_id });
 
@@ -59,11 +66,23 @@ exports.get_one = async (req, res, next) => {
 };
 
 exports.update_one = async (req, res, next) => {
-    const get_data = await AccountModel.findOne({ name: req.body.name });
+    const id = req.body.id;
 
+    if (!id) return res.status(400).json("Not found id!");
+
+    try {
+        var o_id = new ObjectId(id);
+    } catch (error) {
+        return res.status(400).json(error.message);
+    }
+
+    const if_check_data = await AccountModel.findOne({_id: o_id});
+    if (!if_check_data) return res.status(400).json("Sorry data not exists!");
+
+    const get_data = await AccountModel.findOne({_id: { $ne: o_id }, name: req.body.name });
     if (get_data) return res.status(400).json("Sorry data already exists!");
 
-    let doc = await AccountModel.findByIdAndUpdate(req.params.id, req.body, {
+    let doc = await AccountModel.findByIdAndUpdate(o_id, req.body, {
         new: true,
         runValidators: true,
     });

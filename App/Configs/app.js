@@ -6,7 +6,7 @@ const AccountRoutes = require('../../Routes/AccountRoutes');
 const ApplicationRoutes = require('../../Routes/ApplicationRoutes');
 
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('../../public/api-docs/swagger.json');
+const swaggerDocument = require('../../public/api-docs/swagger');
 
 const app = express();
 
